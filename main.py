@@ -57,7 +57,7 @@ def main(POST_ID=None) -> None:
     }
     download_background_video(bg_config["video"])
     download_background_audio(bg_config["audio"])
-    chop_background(bg_config, length, reddit_object)
+    chop_background(bg_config, length+10, reddit_object)
     make_final_video(number_of_comments, length, reddit_object, bg_config)
 
 
