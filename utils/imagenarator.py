@@ -22,7 +22,7 @@ def draw_multiple_line_text(
         line_width, line_height = font.getsize(line)
         if transparent:
             shadowcolor = "black"
-            for i in range(1, 5):
+            for i in range(1,10):
                 draw.text(
                     ((image_width - line_width) / 2 - i, y - i),
                     line,
