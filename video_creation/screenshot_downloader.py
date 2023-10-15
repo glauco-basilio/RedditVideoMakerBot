@@ -46,7 +46,7 @@ def get_screenshots_of_reddit_posts(reddit_object: dict, screenshot_num: int):
         if storymode:
             # Transparent theme
             bgcolor = (0, 0, 0, 0)
-            txtcolor = (255, 255, 255)
+            txtcolor = (255, 191, 0)
             transparent = True
             cookie_file = open("./video_creation/data/cookie-dark-mode.json", encoding="utf-8")
         else:
