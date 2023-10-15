@@ -51,7 +51,7 @@ def draw_multiple_line_text(
         y += line_height + padding
 
 
-def imagemaker(theme, reddit_obj: dict, txtclr, padding=5, transparent=False) -> None:
+def imagemaker(theme, reddit_obj: dict, txtclr, padding=20, transparent=False) -> None:
     """
     Render Images for video
     """
