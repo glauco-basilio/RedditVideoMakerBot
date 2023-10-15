@@ -39,6 +39,14 @@ eng_voices: Final[tuple] = (
     "en_male_cody",  # Serious
 )
 
+
+br_voices: Final[tuple] = (
+    "br_001",  # Portuguese BR - Female 1
+    "br_003",  # Portuguese BR - Female 2
+    "br_004",  # Portuguese BR - Female 3
+    "br_005",  # Portuguese BR - Male
+)
+
 non_eng_voices: Final[tuple] = (
     # Western European voices
     "fr_001",  # French - Male 1
@@ -49,10 +57,6 @@ non_eng_voices: Final[tuple] = (
     "it_male_m18",  # Italian - Male
     # South american voices
     "es_mx_002",  # Spanish MX - Male
-    "br_001",  # Portuguese BR - Female 1
-    "br_003",  # Portuguese BR - Female 2
-    "br_004",  # Portuguese BR - Female 3
-    "br_005",  # Portuguese BR - Male
     # asian voices
     "id_001",  # Indonesian - Female
     "jp_001",  # Japanese - Female 1
@@ -125,8 +129,9 @@ class TikTok:
     def get_voices(self, text: str, voice: Optional[str] = None) -> dict:
         """If voice is not passed, the API will try to use the most fitting voice"""
         # sanitize text
-        text = text.replace("+", "plus").replace("&", "and").replace("r/", "")
-
+        text = text.replace("+", "plus").replace("&", "and").replace("r/", "").replace(" vc "," você ").replace(" td "," tudo ").replace(" vcs "," vocês ")
+        if len(text) < 2:
+            text = "Pausa dramática."
         # prepare url request
         params = {"req_text": text, "speaker_map_type": 0, "aid": 1233}
 
@@ -144,7 +149,7 @@ class TikTok:
 
     @staticmethod
     def random_voice() -> str:
-        return random.choice(eng_voices)
+        return random.choice(br_voices)
 
 
 class TikTokTTSException(Exception):
