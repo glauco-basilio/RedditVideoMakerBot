@@ -205,7 +205,7 @@ def make_final_video(
     image_clips.insert(
         0,
         ffmpeg.input(f"assets/temp/{reddit_id}/png/title.png")["v"].filter(
-            "scale", screenshot_width, -1
+            "scale", screenshot_width+300, -1
         ),
     )
 
@@ -240,13 +240,12 @@ def make_final_video(
                 print(i)
                 image_clips.append(
                     ffmpeg.input(f"assets/temp/{reddit_id}/png/img{i}.png")["v"].filter(
-                        "scale", screenshot_width, -1
+                        "scale", screenshot_width+300, -1
                     )
                 )
                 background_clip = background_clip.overlay(
                     image_clips[i],
                     enable=f"between(t,{current_time},{current_time + audio_clips_durations[i]})",
-                    #enable=f"between(t,{current_time},60)",
                     x="(main_w-overlay_w)/2",
                     y="(main_h-overlay_h)/2",
                 )
@@ -346,8 +345,8 @@ def make_final_video(
         )  # Prevent a error by limiting the path length, do not change this.
         try:
             ffmpeg.output(
-                background_clip,
-                final_audio,
+                background_clip.trim(start=0,end=59).setpts('PTS-STARTPTS'),
+                final_audio.filter("atrim",duration=59),
                 path,
                 f="mp4",
                 **{
@@ -399,7 +398,7 @@ def make_final_video(
         old_percentage = pbar.n
         pbar.update(100 - old_percentage)
     pbar.close()
-    save_data(subreddit, filename + ".mp4", title, idx, background_config["video"][2])
+    save_data(subreddit, filename + ".mp4", title, idx, background_config["video"][2],True)
     print_step("Removing temporary files 🗑")
     cleanups = cleanup(reddit_id)
     print_substep(f"Removed {cleanups} temporary files 🗑")
