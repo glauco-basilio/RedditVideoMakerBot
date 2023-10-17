@@ -4,6 +4,7 @@ import sys
 from os import name
 from pathlib import Path
 from subprocess import Popen
+import traceback
 from typing import NoReturn
 
 from prawcore import ResponseException
@@ -66,9 +67,15 @@ def run_many(times) -> None:
         print_step(
             f'on the {x}{("th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")[x % 10]} iteration of {times}'
         )  # correct 1st 2nd 3rd 4th 5th....
-        main()
-        Popen("cls" if name == "nt" else "clear", shell=True).wait()
-
+        while True:        
+            try:
+                main()
+                Popen("cls" if name == "nt" else "clear", shell=True).wait()
+            except Exception as e:
+                print(traceback.format_exception(*sys.exc_info()))
+                continue
+            else:
+                break
 
 def shutdown() -> NoReturn:
     if "redditid" in globals():
@@ -116,7 +123,9 @@ if __name__ == "__main__":
             main()
     except KeyboardInterrupt:
         shutdown()
-    except ResponseException:
+    except ResponseException as ex:
+        print(ex.response)
+        print(ex.with_traceback())
         print_markdown("## Invalid credentials")
         print_markdown("Please check your credentials in the config.toml file")
         shutdown()
