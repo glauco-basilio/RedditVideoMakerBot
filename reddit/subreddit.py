@@ -9,7 +9,7 @@ from prawcore.exceptions import ResponseException
 
 from utils.console import print_step, print_substep
 from utils.subreddit import get_subreddit_undone
-from utils.videos import check_done
+from utils.videos import check_done, save_data
 from utils.voice import sanitize_text
 from utils.posttextparser import posttextparser
 from utils.ai_methods import sort_by_similarity
@@ -102,6 +102,8 @@ def get_subreddit_threads(POST_ID: str):
         exit()
 
     submission = check_done(submission)  # double-checking
+
+    save_data(subreddit.display_name, "", submission.title, submission.id, "",False)
 
     upvotes = submission.score
     ratio = submission.upvote_ratio * 100

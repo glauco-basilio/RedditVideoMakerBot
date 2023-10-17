@@ -22,7 +22,7 @@ def check_done(
     with open("./video_creation/data/videos.json", "r", encoding="utf-8") as done_vids_raw:
         done_videos = json.load(done_vids_raw)
     for video in done_videos:
-        if video["id"] == str(redditobj):
+        if video["id"] == str(redditobj) and not video["success"]:
             if settings.config["reddit"]["thread"]["post_id"]:
                 print_step(
                     "You already have done this video but since it was declared specifically in the config file the program will continue"
@@ -33,7 +33,7 @@ def check_done(
     return redditobj
 
 
-def save_data(subreddit: str, filename: str, reddit_title: str, reddit_id: str, credit: str):
+def save_data(subreddit: str, filename: str, reddit_title: str, reddit_id: str, credit: str, success:str=False):
     """Saves the videos that have already been generated to a JSON file in video_creation/data/videos.json
 
     Args:
@@ -45,16 +45,23 @@ def save_data(subreddit: str, filename: str, reddit_title: str, reddit_id: str, 
     """
     with open("./video_creation/data/videos.json", "r+", encoding="utf-8") as raw_vids:
         done_vids = json.load(raw_vids)
-        if reddit_id in [video["id"] for video in done_vids]:
-            return  # video already done but was specified to continue anyway in the config file
         payload = {
-            "subreddit": subreddit,
-            "id": reddit_id,
-            "time": str(int(time.time())),
-            "background_credit": credit,
-            "reddit_title": reddit_title,
-            "filename": filename,
-        }
-        done_vids.append(payload)
+                "subreddit": subreddit,
+                "id": reddit_id,
+                "time": str(int(time.time())),
+                "background_credit": credit,
+                "reddit_title": reddit_title,
+                "filename": filename,
+                "success": success
+            }
+        if reddit_id in [video["id"] for video in done_vids]:
+            for video in done_vids:
+                if video["id"] == reddit_id:
+                    video["time"] = str(int(time.time()))
+                    video["success"] = success
+                    video["filename"] = filename
+                    video["background_credit"] = credit
+        else:
+            done_vids.append(payload)
         raw_vids.seek(0)
         json.dump(done_vids, raw_vids, ensure_ascii=False, indent=4)
