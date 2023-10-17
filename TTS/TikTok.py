@@ -129,7 +129,7 @@ class TikTok:
     def get_voices(self, text: str, voice: Optional[str] = None) -> dict:
         """If voice is not passed, the API will try to use the most fitting voice"""
         # sanitize text
-        text = text.replace("+", "plus").replace("&", "and").replace("r/", "").replace(" vc "," você ").replace(" td "," tudo ").replace(" vcs "," vocês ")
+        text = text.replace("+", "plus").replace("&", "and").replace("r/", "").replace(" vc "," você ").replace(" td "," tudo ").replace(" vcs "," vocês ").replace("pq", "Porque").replace("merda", "totôzinho")
         if len(text) < 2:
             text = "Pausa dramática."
         # prepare url request
