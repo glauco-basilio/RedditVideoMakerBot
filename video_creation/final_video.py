@@ -215,7 +215,7 @@ def make_final_video(
             float(
                 ffmpeg.probe(f"assets/temp/{reddit_id}/mp3/postaudio-{i}.mp3")["format"]["duration"]
             )
-            for i in range(number_of_clips)
+            for i in range(number_of_clips+1)
         ]
         audio_clips_durations.insert(
             0,
@@ -236,7 +236,8 @@ def make_final_video(
             )
             current_time += audio_clips_durations[0]
         elif settings.config["settings"]["storymodemethod"] == 1:
-            for i in track(range(0, number_of_clips + 1), "Collecting the image files..."):
+            for i in range(0,number_of_clips+2):#track(range(0, number_of_clips + 1), "Collecting the image files..."):
+                print(i)
                 image_clips.append(
                     ffmpeg.input(f"assets/temp/{reddit_id}/png/img{i}.png")["v"].filter(
                         "scale", screenshot_width, -1
@@ -245,6 +246,7 @@ def make_final_video(
                 background_clip = background_clip.overlay(
                     image_clips[i],
                     enable=f"between(t,{current_time},{current_time + audio_clips_durations[i]})",
+                    #enable=f"between(t,{current_time},60)",
                     x="(main_w-overlay_w)/2",
                     y="(main_h-overlay_h)/2",
                 )
@@ -321,11 +323,11 @@ def make_final_video(
         text=text,
         x=f"(w-text_w)",
         y=f"(h-text_h)",
-        fontsize=5,
-        fontcolor="White",
+        fontsize=20,
+        fontcolor="Black",
         fontfile=os.path.join("fonts", "Roboto-Regular.ttf"),
     )
-    background_clip = background_clip.filter("scale", W, H)
+    #background_clip = background_clip.filter("scale", W, H)
     print_step("Rendering the video 🎥")
     from tqdm import tqdm
 
