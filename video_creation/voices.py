@@ -46,7 +46,10 @@ def save_text_to_mp3(reddit_obj) -> Tuple[int, int]:
                 break
             print("Unknown Choice")
         text_to_mp3 = TTSEngine(get_case_insensitive_key_value(TTSProviders, choice), reddit_obj)
-    return text_to_mp3.run()
+    try:
+        return text_to_mp3.run()
+    except:
+        return TTSEngine(get_case_insensitive_key_value(TTSProviders, "elevenlabs"), reddit_obj).run()
 
 
 def get_case_insensitive_key_value(input_dict, key):
